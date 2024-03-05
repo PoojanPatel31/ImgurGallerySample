@@ -6,7 +6,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
 import com.imgurgallery.BR
 import com.imgurgallery.databinding.DetailActivityBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class GalleryDetailActivity : ComponentActivity() {
 
     companion object {

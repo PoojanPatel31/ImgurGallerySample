@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Imgur Gallery</string>
+    <string name="list_menu_item">List</string>
+    <string name="imgur_image">imgur image</string>
+    <string name="grid_menu_item">Grid</string>
+</resources>

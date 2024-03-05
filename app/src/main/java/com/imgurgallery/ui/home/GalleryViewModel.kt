@@ -8,10 +8,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.imgurgallery.db.repo.GalleryRepository
 import com.imgurgallery.models.GalleryImages
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-open class GalleryViewModel(private val galleryRepo: GalleryRepository) : ViewModel() {
+@HiltViewModel
+open class GalleryViewModel @Inject constructor(private val galleryRepo: GalleryRepository) :
+    ViewModel() {
 
     private val _galleryList = MutableLiveData<Result<List<GalleryImages>>>()
     val galleryList: LiveData<Result<List<GalleryImages>>> get() = _galleryList

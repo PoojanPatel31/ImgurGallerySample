@@ -15,8 +15,8 @@ object WorkManager {
         val workerRequest = PeriodicWorkRequestBuilder<GalleryWorker>(Duration.ofMinutes(5))
             .setConstraints(constraint)
             .build()
-        WorkManager.getInstance(context).cancelAllWork()
-//        WorkManager.getInstance(context).enqueue(workerRequest)
+        WorkManager.getInstance(context).cancelWorkById(workerRequest.id)
+        WorkManager.getInstance(context).enqueue(workerRequest)
     }
 
 }

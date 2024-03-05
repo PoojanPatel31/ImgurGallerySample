@@ -6,18 +6,20 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.ComponentActivity
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.imgurgallery.BR
-import com.imgurgallery.ui.details.GalleryDetailActivity
 import com.imgurgallery.R
 import com.imgurgallery.databinding.HomeActivityBinding
 import com.imgurgallery.models.GalleryImages
+import com.imgurgallery.ui.details.GalleryDetailActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeActivity : ComponentActivity(), Observer<Result<List<GalleryImages>>> {
 
-    private lateinit var galleryViewModel: GalleryViewModel
+    private val galleryViewModel: GalleryViewModel by viewModels()
     private lateinit var adapter: GalleryListAdapter
     private lateinit var bindView: HomeActivityBinding
 
@@ -26,8 +28,6 @@ class HomeActivity : ComponentActivity(), Observer<Result<List<GalleryImages>>> 
         bindView = HomeActivityBinding.inflate(layoutInflater)
         setContentView(bindView.root)
 
-        galleryViewModel =
-            ViewModelProvider(this, GalleryViewModelFactory())[GalleryViewModel::class.java]
         adapter = galleryViewModel.getAdapter()
 
         galleryViewModel.galleryList.observe(this, this)

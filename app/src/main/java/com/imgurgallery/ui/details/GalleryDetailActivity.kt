@@ -3,7 +3,7 @@ package com.imgurgallery.ui.details
 import android.os.Bundle
 import android.view.View
 import androidx.activity.ComponentActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
 import com.imgurgallery.BR
 import com.imgurgallery.databinding.DetailActivityBinding
 
@@ -17,17 +17,12 @@ class GalleryDetailActivity : ComponentActivity() {
         DetailActivityBinding.inflate(layoutInflater)
     }
 
-    private lateinit var viewModel: GalleryDetailViewModel
+    private val viewModel: GalleryDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         intent.extras?.getString(GALLERY_KEY)?.let {
-            viewModel = ViewModelProvider(
-                this,
-                GalleryDetailViewModelFactory()
-            )[GalleryDetailViewModel::class.java]
-
             viewModel.setGalleryId(it)
         } ?: run {
             finish()

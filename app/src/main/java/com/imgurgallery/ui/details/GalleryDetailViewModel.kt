@@ -8,10 +8,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.imgurgallery.db.repo.ImageRepository
 import com.imgurgallery.models.Image
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class GalleryDetailViewModel(private val repo: ImageRepository) : ViewModel() {
+@HiltViewModel
+class GalleryDetailViewModel @Inject constructor(private val repo: ImageRepository) : ViewModel() {
 
     private val adapter: ImageListAdapter = ImageListAdapter()
 

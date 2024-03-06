@@ -10,10 +10,10 @@ Implemented
 * Live Data
 * Retrofit
 * Glide
+* Dependency Injection
 
 Work In Progress
 ---
-* Dependency Injection
 * Android Navigation Component
 * Pagination
 * Work Manager

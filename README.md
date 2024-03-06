@@ -14,6 +14,10 @@ Implemented
 
 Work In Progress
 ---
+* Jetpack Compose UI
+
+Pending
+---
 * Android Navigation Component
 * Pagination
 * Work Manager

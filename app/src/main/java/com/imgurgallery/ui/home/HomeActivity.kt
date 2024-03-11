@@ -21,7 +21,7 @@ class HomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Surface {
-                GalleryList()
+                GalleryList(this)
             }
         }
     }

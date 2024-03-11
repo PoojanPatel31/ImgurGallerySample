@@ -1,6 +1,9 @@
 package com.imgurgallery.ui.home
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -40,11 +43,12 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.imgurgallery.models.GalleryImages
+import com.imgurgallery.ui.details.GalleryDetailActivity
 import com.imgurgallery.util.DateTimeUtil
 
 @ExperimentalMaterial3Api
 @Composable
-fun GalleryList() {
+fun GalleryList(context: Context) {
     val viewModel: GalleryViewModel = hiltViewModel()
 
     val galleryList = viewModel.galleryList.collectAsState()
@@ -53,14 +57,34 @@ fun GalleryList() {
     val listOrientation = viewModel.listOrientation.collectAsState()
     val listOrientationState by remember { listOrientation }
 
+    val onClick: (item: GalleryImages) -> Unit = {
+        val intent = Intent(context, GalleryDetailActivity::class.java)
+        intent.putExtra(GalleryDetailActivity.GALLERY_KEY, it.gallery.id)
+        context.startActivity(intent)
+    }
+
     if (galleryState.isNotEmpty()) {
         if (listOrientationState) {
             LazyColumn {
-                items(items = galleryState) { GalleryRow(item = it) }
+                items(items = galleryState) {
+                    GalleryRow(
+                        modifier = Modifier.clickable {
+                            onClick(it)
+                        },
+                        item = it
+                    )
+                }
             }
         } else {
             LazyVerticalGrid(columns = GridCells.Fixed(3)) {
-                items(items = galleryState) { GalleryRow(item = it) }
+                items(items = galleryState) {
+                    GalleryRow(
+                        modifier = Modifier.clickable {
+                            onClick(it)
+                        },
+                        item = it
+                    )
+                }
             }
         }
     }

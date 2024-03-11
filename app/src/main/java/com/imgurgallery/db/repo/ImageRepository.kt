@@ -1,11 +1,12 @@
 package com.imgurgallery.db.repo
 
-import android.content.Context
-import com.imgurgallery.db.DatabaseFactory
 import com.imgurgallery.db.dao.ImageItemDAO
+import com.imgurgallery.models.Image
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ImageRepository @Inject constructor(private val imageItemDao: ImageItemDAO) {
 
-    suspend fun getAllGalleryImages(galleryId: String) = imageItemDao.getGalleryImages(galleryId)
+    fun getAllGalleryImages(galleryId: String): Flow<List<Image>> =
+        imageItemDao.getGalleryImages(galleryId)
 }

@@ -1,15 +1,14 @@
 package com.imgurgallery.ui.home
 
-import androidx.databinding.ObservableBoolean
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.imgurgallery.db.repo.GalleryRepository
 import com.imgurgallery.models.GalleryImages
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,52 +16,41 @@ import javax.inject.Inject
 open class GalleryViewModel @Inject constructor(private val galleryRepo: GalleryRepository) :
     ViewModel() {
 
-    private val _galleryList = MutableLiveData<Result<List<GalleryImages>>>()
-    val galleryList: LiveData<Result<List<GalleryImages>>> get() = _galleryList
+    private var _galleryList = MutableStateFlow<List<GalleryImages>>(emptyList())
+    val galleryList: StateFlow<List<GalleryImages>>
+        get() = _galleryList
 
-    private val _onGallerySelect = MutableLiveData<String>()
-    val onGallerySelect: LiveData<String> get() = _onGallerySelect
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean>
+        get() = _isLoading
 
-    val isLoading = ObservableBoolean()
-
-    private var adapter = GalleryListAdapter {
-        _onGallerySelect.value = it.gallery.id
-    }
-    private val galleryObserver = Observer<List<GalleryImages>> { value ->
-        if (value.isNotEmpty()) {
-            _galleryList.postValue(Result.success(value))
-        } else {
-            _galleryList.postValue(Result.failure(Exception("Empty Gallery")))
-        }
-    }
+    private val _listOrientation = MutableStateFlow(true)
+    val listOrientation: StateFlow<Boolean>
+        get() = _listOrientation
 
     init {
-        galleryRepo.getGalleries().observeForever(galleryObserver)
+        viewModelScope.launch {
+            galleryRepo.getGalleries().flowOn(Dispatchers.IO).collect { _galleryList.emit(it) }
+        }
+        validateIfDataIsCached()
     }
 
-    fun getAdapter(): GalleryListAdapter = adapter
-
-    fun setAdapterData(list: List<GalleryImages>) {
-        adapter.loadImages(list)
-    }
-
-    fun validateIfDataIsCached() {
+    private fun validateIfDataIsCached() {
         viewModelScope.launch(Dispatchers.IO) { if (!galleryRepo.isCached()) fetchGalleryAndCache() }
     }
 
     /**
      * Fetch Imgur images in background thread and show the images in main thread.
      */
-    fun fetchGalleryAndCache() {
+    private fun fetchGalleryAndCache() {
         viewModelScope.launch(Dispatchers.IO) {
-            isLoading.set(true)
+            _isLoading.value = true
             galleryRepo.fetchAndCacheGallery()
-            isLoading.set(false)
+            _isLoading.value = false
         }
     }
 
-    override fun onCleared() {
-        galleryRepo.getGalleries().removeObserver(galleryObserver)
-        super.onCleared()
+    fun toggleOrientation() {
+        _listOrientation.value = !listOrientation.value
     }
 }

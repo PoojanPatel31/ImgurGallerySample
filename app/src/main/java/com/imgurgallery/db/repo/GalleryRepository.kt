@@ -1,9 +1,9 @@
 package com.imgurgallery.db.repo
 
-import androidx.lifecycle.LiveData
 import com.imgurgallery.db.dao.GalleryItemDAO
 import com.imgurgallery.models.GalleryImages
 import com.imgurgallery.network.RestAPI
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GalleryRepository @Inject constructor(
@@ -13,7 +13,7 @@ class GalleryRepository @Inject constructor(
 
     suspend fun isCached(): Boolean = galleryDao.galleryCount() > 0
 
-    fun getGalleries(): LiveData<List<GalleryImages>> = galleryDao.getAllGalleries()
+    fun getGalleries(): Flow<List<GalleryImages>> = galleryDao.getAllGalleries()
 
     suspend fun fetchAndCacheGallery() {
         val galleries = restApi.getGallery()

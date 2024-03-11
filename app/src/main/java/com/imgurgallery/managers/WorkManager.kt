@@ -16,7 +16,7 @@ object WorkManager {
             .setConstraints(constraint)
             .build()
         WorkManager.getInstance(context).cancelWorkById(workerRequest.id)
-        WorkManager.getInstance(context).enqueue(workerRequest)
+//        WorkManager.getInstance(context).enqueue(workerRequest)
     }
 
 }

@@ -11,14 +11,14 @@ Implemented
 * Retrofit
 * Glide
 * Dependency Injection
+* Jetpack Compose UI
 
 Work In Progress
 ---
-* Jetpack Compose UI
+* Android Navigation Component
 
 Pending
 ---
-* Android Navigation Component
 * Pagination
 * Work Manager
 * Unit Tests

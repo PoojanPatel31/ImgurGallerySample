@@ -1,10 +1,6 @@
 package com.imgurgallery.modules
 
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import com.imgurgallery.BuildConfig
-import com.imgurgallery.models.GalleryImages
-import com.imgurgallery.network.GalleryResponseMapper
 import com.imgurgallery.network.HTTPInterceptor
 import com.imgurgallery.network.RestAPI
 import dagger.Module
@@ -39,17 +35,7 @@ object NetworkModule {
         return Retrofit.Builder()
             .client(getOkHttpClient())
             .baseUrl(BuildConfig.BASE_URL)
-            .addConverterFactory(
-                GsonConverterFactory.create(
-                    GsonBuilder().registerTypeAdapter(
-                        TypeToken.getParameterized(
-                            List::class.java,
-                            GalleryImages::class.java
-                        ).type,
-                        GalleryResponseMapper()
-                    ).create()
-                )
-            )
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(RestAPI::class.java)
     }

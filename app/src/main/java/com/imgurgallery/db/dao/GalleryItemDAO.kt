@@ -17,7 +17,7 @@ interface GalleryItemDAO {
     fun getAllGalleries(): Flow<List<GalleryImages>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveGallery(gallery: Gallery, images: List<Image>)
+    suspend fun saveGallery(galleries: List<Gallery>, images: List<Image>)
 
     @Query("SELECT COUNT(id) from gallery")
     suspend fun galleryCount(): Long

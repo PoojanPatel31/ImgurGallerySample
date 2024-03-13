@@ -11,12 +11,11 @@ import java.time.Duration
 object WorkManager {
 
     fun setupWorker(context: Context) {
-        val constraint = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
-        val workerRequest = PeriodicWorkRequestBuilder<GalleryWorker>(Duration.ofMinutes(5))
-            .setConstraints(constraint)
-            .build()
-        WorkManager.getInstance(context).cancelWorkById(workerRequest.id)
-//        WorkManager.getInstance(context).enqueue(workerRequest)
+//        val constraint = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+//        val workerRequest = PeriodicWorkRequestBuilder<GalleryWorker>(Duration.ofMinutes(5))
+//            .setConstraints(constraint)
+//            .build()
+        WorkManager.getInstance(context).cancelAllWork()
     }
 
 }

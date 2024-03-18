@@ -1,9 +1,11 @@
-package com.imgurgallery.ui.home
+package com.imgurgallery.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.imgurgallery.db.repo.GalleryRepository
+import com.imgurgallery.db.repo.ImageRepository
 import com.imgurgallery.models.GalleryImages
+import com.imgurgallery.models.Image
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,12 +15,19 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-open class GalleryViewModel @Inject constructor(private val galleryRepo: GalleryRepository) :
+open class HomeViewModel @Inject constructor(
+    private val galleryRepo: GalleryRepository,
+    private val imageRepo: ImageRepository
+) :
     ViewModel() {
 
-    private var _galleryList = MutableStateFlow<List<GalleryImages>>(emptyList())
+    private val _galleryList = MutableStateFlow<List<GalleryImages>>(emptyList())
     val galleryList: StateFlow<List<GalleryImages>>
         get() = _galleryList
+
+    private val _imageList = MutableStateFlow<List<Image>>(emptyList())
+    val imageList: StateFlow<List<Image>>
+        get() = _imageList
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean>
@@ -28,14 +37,7 @@ open class GalleryViewModel @Inject constructor(private val galleryRepo: Gallery
     val listOrientation: StateFlow<Boolean>
         get() = _listOrientation
 
-    init {
-        viewModelScope.launch {
-            galleryRepo.getGalleries().flowOn(Dispatchers.IO).collect { _galleryList.emit(it) }
-        }
-        validateIfDataIsCached()
-    }
-
-    private fun validateIfDataIsCached() {
+    fun validateIfDataIsCached() {
         viewModelScope.launch(Dispatchers.IO) { if (!galleryRepo.isCached()) fetchGalleryAndCache() }
     }
 
@@ -52,5 +54,21 @@ open class GalleryViewModel @Inject constructor(private val galleryRepo: Gallery
 
     fun toggleOrientation() {
         _listOrientation.value = !listOrientation.value
+    }
+
+    fun fetchGalleryList() {
+        viewModelScope.launch {
+            galleryRepo.getGalleries().flowOn(Dispatchers.IO).collect {
+                _galleryList.emit(it)
+            }
+        }
+    }
+
+    fun setGalleryId(galleryId: String) {
+        viewModelScope.launch {
+            imageRepo.getAllGalleryImages(galleryId).flowOn(Dispatchers.IO).collect {
+                _imageList.emit(it)
+            }
+        }
     }
 }

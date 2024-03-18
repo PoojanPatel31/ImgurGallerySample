@@ -1,11 +1,10 @@
 package com.imgurgallery.ui.home
 
-import android.content.Context
-import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,56 +31,53 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.placeholder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.imgurgallery.R
 import com.imgurgallery.models.GalleryImages
-import com.imgurgallery.ui.details.GalleryDetailActivity
+import com.imgurgallery.ui.HomeViewModel
 import com.imgurgallery.util.DateTimeUtil
 
 @ExperimentalMaterial3Api
 @Composable
-fun GalleryList(context: Context) {
-    val viewModel: GalleryViewModel = hiltViewModel()
-
+fun GalleryList(
+    viewModel: HomeViewModel,
+    innerPadding: PaddingValues,
+    onItemClick: (item: GalleryImages) -> Unit
+) {
     val galleryList = viewModel.galleryList.collectAsState()
     val galleryState by remember { galleryList }
 
     val listOrientation = viewModel.listOrientation.collectAsState()
     val listOrientationState by remember { listOrientation }
 
-    val onClick: (item: GalleryImages) -> Unit = {
-        val intent = Intent(context, GalleryDetailActivity::class.java)
-        intent.putExtra(GalleryDetailActivity.GALLERY_KEY, it.gallery.id)
-        context.startActivity(intent)
-    }
-
     if (galleryState.isNotEmpty()) {
         if (listOrientationState) {
-            LazyColumn {
+            LazyColumn(modifier = Modifier.padding(innerPadding)) {
                 items(items = galleryState) {
                     GalleryRow(
-                        modifier = Modifier.clickable {
-                            onClick(it)
-                        },
+                        modifier = Modifier.clickable { onItemClick(it) },
                         item = it
                     )
                 }
             }
         } else {
-            LazyVerticalGrid(columns = GridCells.Fixed(3)) {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3),
+                modifier = Modifier.padding(innerPadding)
+            ) {
                 items(items = galleryState) {
                     GalleryRow(
-                        modifier = Modifier.clickable {
-                            onClick(it)
-                        },
+                        modifier = Modifier.clickable { onItemClick(it) },
                         item = it
                     )
                 }
@@ -105,6 +101,7 @@ fun GalleryRow(modifier: Modifier = Modifier, item: GalleryImages) {
             .fillMaxWidth()
             .height(200.dp)
             .padding(8.dp)
+            .shadow(8.dp)
             .clip(shape = RoundedCornerShape(8.dp))
             .then(modifier)
     ) {
@@ -115,6 +112,7 @@ fun GalleryRow(modifier: Modifier = Modifier, item: GalleryImages) {
             requestBuilderTransform = {
                 it.diskCacheStrategy(DiskCacheStrategy.ALL)
             },
+            loading = placeholder(R.drawable.loading_svg),
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()

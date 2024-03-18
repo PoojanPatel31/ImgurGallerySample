@@ -6,7 +6,7 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.imgurgallery.ui.home.HomeActivity
+import com.imgurgallery.ui.home.ListFragment
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,7 +19,7 @@ import org.junit.runner.RunWith
 class GalleryActivityTest {
 
     @get:Rule
-    val activityRule = ActivityScenarioRule(HomeActivity::class.java)
+    val activityRule = ActivityScenarioRule(ListFragment::class.java)
 
     /**
      * Test when gallery is being fetched,

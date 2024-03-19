@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.imgurgallery.ui.HomeViewModel
 import com.imgurgallery.ui.ToolBar
@@ -19,11 +20,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
 
-    companion object {
-        const val GALLERY_KEY = "gallery_item_id"
-    }
-
     private val viewModel: HomeViewModel by activityViewModels()
+    private val args: DetailFragmentArgs by navArgs()
 
     @ExperimentalMaterial3Api
     @ExperimentalGlideComposeApi
@@ -45,7 +43,7 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        arguments?.getString(GALLERY_KEY)?.let {
+        args.galleryId?.let {
             viewModel.setGalleryId(it)
         } ?: findNavController().popBackStack()
     }

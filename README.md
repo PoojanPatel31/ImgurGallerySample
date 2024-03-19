@@ -12,13 +12,13 @@ Implemented
 * Glide
 * Dependency Injection
 * Jetpack Compose UI
+* Android Navigation Component
 
 Work In Progress
 ---
-* Android Navigation Component
+* Pagination
 
 Pending
 ---
-* Pagination
 * Work Manager
 * Unit Tests
